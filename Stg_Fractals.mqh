@@ -15,31 +15,26 @@
 
 // User input params.
 INPUT string __Fractals_Parameters__ = "-- Fractals strategy params --";  // >>> FRACTALS <<<
-INPUT int Fractals_Active_Tf = 0;  // Activate timeframes (1-255, e.g. M1=1,M5=2,M15=4,M30=8,H1=16,H2=32...)
-INPUT int Fractals_Shift = 0;      // Shift
-INPUT ENUM_TRAIL_TYPE Fractals_TrailingStopMethod = 1;     // Trail stop method
-INPUT ENUM_TRAIL_TYPE Fractals_TrailingProfitMethod = 21;  // Trail profit method
-INPUT int Fractals_SignalOpenLevel = 0;                    // Signal open level
-INPUT int Fractals1_SignalBaseMethod = 3;                  // Signal base method (-3-3)
-INPUT int Fractals1_OpenCondition1 = 971;                  // Open condition 1 (0-1023)
-INPUT int Fractals1_OpenCondition2 = 0;                    // Open condition 2 (0-)
-INPUT ENUM_MARKET_EVENT Fractals1_CloseCondition = 11;     // Close condition for M1
-INPUT double Fractals_MaxSpread = 6.0;                     // Max spread to trade (pips)
+INPUT int Fractals_Shift = 0;                                             // Shift
+INPUT int Fractals_SignalOpenMethod = 3;                                  // Signal open method (-3-3)
+INPUT int Fractals_SignalOpenLevel = 0;                                   // Signal open level
+INPUT int Fractals_SignalCloseMethod = 3;                                 // Signal close method (-3-3)
+INPUT int Fractals_SignalCloseLevel = 0;                                  // Signal close level
+INPUT int Fractals_PriceLimitMethod = 0;                                  // Price limit method
+INPUT double Fractals_PriceLimitLevel = 0;                                // Price limit level
+INPUT double Fractals_MaxSpread = 6.0;                                    // Max spread to trade (pips)
 
 // Struct to define strategy parameters to override.
 struct Stg_Fractals_Params : Stg_Params {
   unsigned int Fractals_Period;
   ENUM_APPLIED_PRICE Fractals_Applied_Price;
   int Fractals_Shift;
-  ENUM_TRAIL_TYPE Fractals_TrailingStopMethod;
-  ENUM_TRAIL_TYPE Fractals_TrailingProfitMethod;
+  int Fractals_SignalOpenMethod;
   double Fractals_SignalOpenLevel;
-  long Fractals_SignalBaseMethod;
-  long Fractals_SignalOpenMethod1;
-  long Fractals_SignalOpenMethod2;
+  int Fractals_SignalCloseMethod;
   double Fractals_SignalCloseLevel;
-  ENUM_MARKET_EVENT Fractals_SignalCloseMethod1;
-  ENUM_MARKET_EVENT Fractals_SignalCloseMethod2;
+  int Fractals_PriceLimitMethod;
+  double Fractals_PriceLimitLevel;
   double Fractals_MaxSpread;
 
   // Constructor: Set default param values.
@@ -47,15 +42,12 @@ struct Stg_Fractals_Params : Stg_Params {
       : Fractals_Period(::Fractals_Period),
         Fractals_Applied_Price(::Fractals_Applied_Price),
         Fractals_Shift(::Fractals_Shift),
-        Fractals_TrailingStopMethod(::Fractals_TrailingStopMethod),
-        Fractals_TrailingProfitMethod(::Fractals_TrailingProfitMethod),
+        Fractals_SignalOpenMethod(::Fractals_SignalOpenMethod),
         Fractals_SignalOpenLevel(::Fractals_SignalOpenLevel),
-        Fractals_SignalBaseMethod(::Fractals_SignalBaseMethod),
-        Fractals_SignalOpenMethod1(::Fractals_SignalOpenMethod1),
-        Fractals_SignalOpenMethod2(::Fractals_SignalOpenMethod2),
+        Fractals_SignalCloseMethod(::Fractals_SignalCloseMethod),
         Fractals_SignalCloseLevel(::Fractals_SignalCloseLevel),
-        Fractals_SignalCloseMethod1(::Fractals_SignalCloseMethod1),
-        Fractals_SignalCloseMethod2(::Fractals_SignalCloseMethod2),
+        Fractals_PriceLimitMethod(::Fractals_PriceLimitMethod),
+        Fractals_PriceLimitLevel(::Fractals_PriceLimitLevel),
         Fractals_MaxSpread(::Fractals_MaxSpread) {}
 };
 
@@ -107,11 +99,8 @@ class Stg_Fractals : public Strategy {
     StgParams sparams(new Trade(_tf, _Symbol), new Indi_Fractals(adx_params, adx_iparams, cparams), NULL, NULL);
     sparams.logger.SetLevel(_log_level);
     sparams.SetMagicNo(_magic_no);
-    sparams.SetSignals(_params.Fractals_SignalBaseMethod, _params.Fractals_SignalOpenMethod1,
-                       _params.Fractals_SignalOpenMethod2, _params.Fractals_SignalCloseMethod1,
-                       _params.Fractals_SignalCloseMethod2, _params.Fractals_SignalOpenLevel,
-                       _params.Fractals_SignalCloseLevel);
-    sparams.SetStops(_params.Fractals_TrailingProfitMethod, _params.Fractals_TrailingStopMethod);
+    sparams.SetSignals(_params.Fractals_SignalOpenMethod, _params.Fractals_SignalOpenMethod,
+                       _params.Fractals_SignalCloseMethod, _params.Fractals_SignalCloseMethod);
     sparams.SetMaxSpread(_params.Fractals_MaxSpread);
     // Initialize strategy instance.
     Strategy *_strat = new Stg_Fractals(sparams, "Fractals");
@@ -124,10 +113,10 @@ class Stg_Fractals : public Strategy {
    * @param
    *   _cmd (int) - type of trade order command
    *   period (int) - period to check for
-   *   _signal_method (int) - signal method to use by using bitwise AND operation
-   *   _signal_level1 (double) - signal level to consider the signal
+   *   _method (int) - signal method to use by using bitwise AND operation
+   *   _level1 (double) - signal level to consider the signal
    */
-  bool SignalOpen(ENUM_ORDER_TYPE _cmd, long _signal_method = EMPTY, double _signal_level = EMPTY) {
+  bool SignalOpen(ENUM_ORDER_TYPE _cmd, int _method = 0, double _level = 0.0) {
     bool _result = false;
     double fractals_0_lower = ((Indi_Fractals *)this.Data()).GetValue(LINE_LOWER, 0);
     double fractals_0_upper = ((Indi_Fractals *)this.Data()).GetValue(LINE_UPPER, 0);
@@ -135,32 +124,31 @@ class Stg_Fractals : public Strategy {
     double fractals_1_upper = ((Indi_Fractals *)this.Data()).GetValue(LINE_UPPER, 1);
     double fractals_2_lower = ((Indi_Fractals *)this.Data()).GetValue(LINE_LOWER, 2);
     double fractals_2_upper = ((Indi_Fractals *)this.Data()).GetValue(LINE_UPPER, 2);
-    if (_signal_method == EMPTY) _signal_method = GetSignalBaseMethod();
-    if (_signal_level1 == EMPTY) _signal_level1 = GetSignalLevel1();
-    if (_signal_level2 == EMPTY) _signal_level2 = GetSignalLevel2();
+    if (_level1 == EMPTY) _level1 = GetSignalLevel1();
+    if (_level2 == EMPTY) _level2 = GetSignalLevel2();
     bool lower = (fractals_0_lower != 0.0 || fractals_1_lower != 0.0 || fractals_2_lower != 0.0);
     bool upper = (fractals_0_upper != 0.0 || fractals_1_upper != 0.0 || fractals_2_upper != 0.0);
     switch (_cmd) {
       case ORDER_TYPE_BUY:
         _result = lower;
-        if (METHOD(_signal_method, 0)) _result &= Open[CURR] > Close[PREV];
-        if (METHOD(_signal_method, 1)) _result &= this.Chart().GetBid() > Open[CURR];
-        // if (METHOD(_signal_method, 0)) _result &= !Trade_Fractals(Convert::NegateOrderType(_cmd), PERIOD_M30);
-        // if (METHOD(_signal_method, 1)) _result &= !Trade_Fractals(Convert::NegateOrderType(_cmd),
-        // Convert::IndexToTf(fmax(index + 1, M30))); if (METHOD(_signal_method, 2)) _result &=
+        if (METHOD(_method, 0)) _result &= Open[CURR] > Close[PREV];
+        if (METHOD(_method, 1)) _result &= this.Chart().GetBid() > Open[CURR];
+        // if (METHOD(_method, 0)) _result &= !Trade_Fractals(Convert::NegateOrderType(_cmd), PERIOD_M30);
+        // if (METHOD(_method, 1)) _result &= !Trade_Fractals(Convert::NegateOrderType(_cmd),
+        // Convert::IndexToTf(fmax(index + 1, M30))); if (METHOD(_method, 2)) _result &=
         // !Trade_Fractals(Convert::NegateOrderType(_cmd), Convert::IndexToTf(fmax(index + 2, M30))); if
-        // (METHOD(_signal_method, 1)) _result &= !Fractals_On_Sell(tf); if (METHOD(_signal_method, 3)) _result &=
+        // (METHOD(_method, 1)) _result &= !Fractals_On_Sell(tf); if (METHOD(_method, 3)) _result &=
         // Fractals_On_Buy(M30);
         break;
       case ORDER_TYPE_SELL:
         _result = upper;
-        if (METHOD(_signal_method, 0)) _result &= Open[CURR] < Close[PREV];
-        if (METHOD(_signal_method, 1)) _result &= this.Chart().GetAsk() < Open[CURR];
-        // if (METHOD(_signal_method, 0)) _result &= !Trade_Fractals(Convert::NegateOrderType(_cmd), PERIOD_M30);
-        // if (METHOD(_signal_method, 1)) _result &= !Trade_Fractals(Convert::NegateOrderType(_cmd),
-        // Convert::IndexToTf(fmax(index + 1, M30))); if (METHOD(_signal_method, 2)) _result &=
+        if (METHOD(_method, 0)) _result &= Open[CURR] < Close[PREV];
+        if (METHOD(_method, 1)) _result &= this.Chart().GetAsk() < Open[CURR];
+        // if (METHOD(_method, 0)) _result &= !Trade_Fractals(Convert::NegateOrderType(_cmd), PERIOD_M30);
+        // if (METHOD(_method, 1)) _result &= !Trade_Fractals(Convert::NegateOrderType(_cmd),
+        // Convert::IndexToTf(fmax(index + 1, M30))); if (METHOD(_method, 2)) _result &=
         // !Trade_Fractals(Convert::NegateOrderType(_cmd), Convert::IndexToTf(fmax(index + 2, M30))); if
-        // (METHOD(_signal_method, 1)) _result &= !Fractals_On_Buy(tf); if (METHOD(_signal_method, 3)) _result &=
+        // (METHOD(_method, 1)) _result &= !Fractals_On_Buy(tf); if (METHOD(_method, 3)) _result &=
         // Fractals_On_Sell(M30);
         break;
     }
@@ -170,8 +158,23 @@ class Stg_Fractals : public Strategy {
   /**
    * Check strategy's closing signal.
    */
-  bool SignalClose(ENUM_ORDER_TYPE _cmd, long _signal_method = EMPTY, double _signal_level = EMPTY) {
-    if (_signal_level == EMPTY) _signal_level = GetSignalCloseLevel();
-    return SignalOpen(Order::NegateOrderType(_cmd), _signal_method, _signal_level);
+  bool SignalClose(ENUM_ORDER_TYPE _cmd, int _method = 0, double _level = 0.0) {
+    return SignalOpen(Order::NegateOrderType(_cmd), _method, _level);
+  }
+
+  /**
+   * Gets price limit value for profit take or stop loss.
+   */
+  double PriceLimit(ENUM_ORDER_TYPE _cmd, ENUM_STG_PRICE_LIMIT_MODE _mode, int _method = 0, double _level = 0.0) {
+    double _trail = _level * Market().GetPipSize();
+    int _direction = Order::OrderDirection(_cmd) * (_mode == LIMIT_VALUE_STOP ? -1 : 1);
+    double _default_value = Market().GetCloseOffer(_cmd) + _trail * _method * _direction;
+    double _result = _default_value;
+    switch (_method) {
+      case 0: {
+        // @todo
+      }
+    }
+    return _result;
   }
 };

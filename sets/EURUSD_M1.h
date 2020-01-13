@@ -12,15 +12,12 @@ struct Stg_Fractals_EURUSD_M1_Params : Stg_Fractals_Params {
     Fractals_Period = 32;
     Fractals_Applied_Price = 3;
     Fractals_Shift = 0;
-    Fractals_TrailingStopMethod = 6;
-    Fractals_TrailingProfitMethod = 11;
+    Fractals_SignalOpenMethod = 0;
     Fractals_SignalOpenLevel = 36;
-    Fractals_SignalBaseMethod = 0;
-    Fractals_SignalOpenMethod1 = 0;
-    Fractals_SignalOpenMethod2 = 0;
+    Fractals_SignalCloseMethod = 0;
     Fractals_SignalCloseLevel = 36;
-    Fractals_SignalCloseMethod1 = 0;
-    Fractals_SignalCloseMethod2 = 0;
+    Fractals_PriceLimitMethod = 0;
+    Fractals_PriceLimitLevel = 0;
     Fractals_MaxSpread = 2;
   }
 };
