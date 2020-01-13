@@ -9,8 +9,6 @@ struct Stg_Fractals_EURUSD_M5_Params : Stg_Fractals_Params {
   Stg_Fractals_EURUSD_M5_Params() {
     symbol = "EURUSD";
     tf = PERIOD_M5;
-    Fractals_Period = 2;
-    Fractals_Applied_Price = 3;
     Fractals_Shift = 0;
     Fractals_SignalOpenMethod = -61;
     Fractals_SignalOpenLevel = 36;

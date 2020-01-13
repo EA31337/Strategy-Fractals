@@ -26,8 +26,6 @@ INPUT double Fractals_MaxSpread = 6.0;                                    // Max
 
 // Struct to define strategy parameters to override.
 struct Stg_Fractals_Params : Stg_Params {
-  unsigned int Fractals_Period;
-  ENUM_APPLIED_PRICE Fractals_Applied_Price;
   int Fractals_Shift;
   int Fractals_SignalOpenMethod;
   double Fractals_SignalOpenLevel;
@@ -39,9 +37,7 @@ struct Stg_Fractals_Params : Stg_Params {
 
   // Constructor: Set default param values.
   Stg_Fractals_Params()
-      : Fractals_Period(::Fractals_Period),
-        Fractals_Applied_Price(::Fractals_Applied_Price),
-        Fractals_Shift(::Fractals_Shift),
+      : Fractals_Shift(::Fractals_Shift),
         Fractals_SignalOpenMethod(::Fractals_SignalOpenMethod),
         Fractals_SignalOpenLevel(::Fractals_SignalOpenLevel),
         Fractals_SignalCloseMethod(::Fractals_SignalCloseMethod),
@@ -94,9 +90,8 @@ class Stg_Fractals : public Strategy {
     }
     // Initialize strategy parameters.
     ChartParams cparams(_tf);
-    Fractals_Params adx_params(_params.Fractals_Period, _params.Fractals_Applied_Price);
-    IndicatorParams adx_iparams(10, INDI_Fractals);
-    StgParams sparams(new Trade(_tf, _Symbol), new Indi_Fractals(adx_params, adx_iparams, cparams), NULL, NULL);
+    IndicatorParams fractals_iparams(10, INDI_FRACTALS);
+    StgParams sparams(new Trade(_tf, _Symbol), new Indi_Fractals(fractals_iparams, cparams), NULL, NULL);
     sparams.logger.SetLevel(_log_level);
     sparams.SetMagicNo(_magic_no);
     sparams.SetSignals(_params.Fractals_SignalOpenMethod, _params.Fractals_SignalOpenMethod,
@@ -114,7 +109,7 @@ class Stg_Fractals : public Strategy {
    *   _cmd (int) - type of trade order command
    *   period (int) - period to check for
    *   _method (int) - signal method to use by using bitwise AND operation
-   *   _level1 (double) - signal level to consider the signal
+   *   _level (double) - signal level to consider the signal
    */
   bool SignalOpen(ENUM_ORDER_TYPE _cmd, int _method = 0, double _level = 0.0) {
     bool _result = false;
@@ -124,8 +119,6 @@ class Stg_Fractals : public Strategy {
     double fractals_1_upper = ((Indi_Fractals *)this.Data()).GetValue(LINE_UPPER, 1);
     double fractals_2_lower = ((Indi_Fractals *)this.Data()).GetValue(LINE_LOWER, 2);
     double fractals_2_upper = ((Indi_Fractals *)this.Data()).GetValue(LINE_UPPER, 2);
-    if (_level1 == EMPTY) _level1 = GetSignalLevel1();
-    if (_level2 == EMPTY) _level2 = GetSignalLevel2();
     bool lower = (fractals_0_lower != 0.0 || fractals_1_lower != 0.0 || fractals_2_lower != 0.0);
     bool upper = (fractals_0_upper != 0.0 || fractals_1_upper != 0.0 || fractals_2_upper != 0.0);
     switch (_cmd) {
