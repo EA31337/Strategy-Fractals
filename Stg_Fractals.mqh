@@ -96,37 +96,29 @@ class Stg_Fractals : public Strategy {
    *   _level (double) - signal level to consider the signal
    */
   bool SignalOpen(ENUM_ORDER_TYPE _cmd, int _method = 0, double _level = 0.0) {
-    bool _result = false;
-    double fractals_0_lower = ((Indi_Fractals *)this.Data()).GetValue(LINE_LOWER, 0);
-    double fractals_0_upper = ((Indi_Fractals *)this.Data()).GetValue(LINE_UPPER, 0);
-    double fractals_1_lower = ((Indi_Fractals *)this.Data()).GetValue(LINE_LOWER, 1);
-    double fractals_1_upper = ((Indi_Fractals *)this.Data()).GetValue(LINE_UPPER, 1);
-    double fractals_2_lower = ((Indi_Fractals *)this.Data()).GetValue(LINE_LOWER, 2);
-    double fractals_2_upper = ((Indi_Fractals *)this.Data()).GetValue(LINE_UPPER, 2);
-    bool lower = (fractals_0_lower != 0.0 || fractals_1_lower != 0.0 || fractals_2_lower != 0.0);
-    bool upper = (fractals_0_upper != 0.0 || fractals_1_upper != 0.0 || fractals_2_upper != 0.0);
+    Chart *_chart = Chart();
+    Indicator *_indi = Data();
+    bool _is_valid = _indi[CURR].IsValid() && _indi[PREV].IsValid() && _indi[PPREV].IsValid();
+    bool _result = _is_valid;
+    if (!_result) {
+      // Returns false when indicator data is not valid.
+      return false;
+    }
+    double level = _level * Chart().GetPipSize();
+    bool lower = (_indi[CURR].value[LINE_LOWER] != 0.0 || _indi[PREV].value[LINE_LOWER] != 0.0 || _indi[PPREV].value[LINE_LOWER] != 0.0);
+    bool upper = (_indi[CURR].value[LINE_UPPER] != 0.0 || _indi[PREV].value[LINE_UPPER] != 0.0 || _indi[PPREV].value[LINE_UPPER] != 0.0);
     switch (_cmd) {
       case ORDER_TYPE_BUY:
         _result = lower;
-        if (METHOD(_method, 0)) _result &= Open[CURR] > Close[PREV];
-        if (METHOD(_method, 1)) _result &= this.Chart().GetBid() > Open[CURR];
-        // if (METHOD(_method, 0)) _result &= !Trade_Fractals(Convert::NegateOrderType(_cmd), PERIOD_M30);
-        // if (METHOD(_method, 1)) _result &= !Trade_Fractals(Convert::NegateOrderType(_cmd),
-        // Convert::IndexToTf(fmax(index + 1, M30))); if (METHOD(_method, 2)) _result &=
-        // !Trade_Fractals(Convert::NegateOrderType(_cmd), Convert::IndexToTf(fmax(index + 2, M30))); if
-        // (METHOD(_method, 1)) _result &= !Fractals_On_Sell(tf); if (METHOD(_method, 3)) _result &=
-        // Fractals_On_Buy(M30);
+        if (METHOD(_method, 0)) _result &= _indi[CURR].value[LINE_LOWER] != 0.0;
+        if (METHOD(_method, 1)) _result &= _indi[PREV].value[LINE_LOWER] != 0.0;
+        if (METHOD(_method, 2)) _result &= _indi[PPREV].value[LINE_LOWER] != 0.0;
         break;
       case ORDER_TYPE_SELL:
         _result = upper;
-        if (METHOD(_method, 0)) _result &= Open[CURR] < Close[PREV];
-        if (METHOD(_method, 1)) _result &= this.Chart().GetAsk() < Open[CURR];
-        // if (METHOD(_method, 0)) _result &= !Trade_Fractals(Convert::NegateOrderType(_cmd), PERIOD_M30);
-        // if (METHOD(_method, 1)) _result &= !Trade_Fractals(Convert::NegateOrderType(_cmd),
-        // Convert::IndexToTf(fmax(index + 1, M30))); if (METHOD(_method, 2)) _result &=
-        // !Trade_Fractals(Convert::NegateOrderType(_cmd), Convert::IndexToTf(fmax(index + 2, M30))); if
-        // (METHOD(_method, 1)) _result &= !Fractals_On_Buy(tf); if (METHOD(_method, 3)) _result &=
-        // Fractals_On_Sell(M30);
+        if (METHOD(_method, 0)) _result &= _indi[CURR].value[LINE_UPPER] != 0.0;
+        if (METHOD(_method, 1)) _result &= _indi[PREV].value[LINE_UPPER] != 0.0;
+        if (METHOD(_method, 2)) _result &= _indi[PPREV].value[LINE_UPPER] != 0.0;
         break;
     }
     return _result;
@@ -175,15 +167,23 @@ class Stg_Fractals : public Strategy {
    * Gets price limit value for profit take or stop loss.
    */
   double PriceLimit(ENUM_ORDER_TYPE _cmd, ENUM_ORDER_TYPE_VALUE _mode, int _method = 0, double _level = 0.0) {
+    Chart *_chart = Chart();
+    Indicator *_indi = Data();
     double _trail = _level * Market().GetPipSize();
-    int _direction = Order::OrderDirection(_cmd) * (_mode == ORDER_TYPE_SL ? -1 : 1);
+    int _direction = Order::OrderDirection(_cmd, _mode);
     double _default_value = Market().GetCloseOffer(_cmd) + _trail * _method * _direction;
     double _result = _default_value;
     switch (_method) {
-      case 0: {
-        // @todo
-      }
+      case 0:
+        _result = _direction < 0 ? _indi[PREV].value[LINE_LOWER] - _trail : _indi[PREV].value[LINE_UPPER] + _trail;
+        break;
+      case 1:
+        _result = _direction < 0 ? _indi.GetMinDbl(20) - _trail : _indi.GetMaxDbl(20) + _trail;
+        break;
+      case 2:
+        _result = _direction < 0 ? _indi.GetMinDbl(50) - _trail : _indi.GetMaxDbl(50) + _trail;
+        break;
     }
-    return _result;
+    return fmax(_result, 0);
   }
 };
