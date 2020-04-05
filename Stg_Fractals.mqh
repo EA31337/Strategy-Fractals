@@ -98,7 +98,7 @@ class Stg_Fractals : public Strategy {
    */
   bool SignalOpen(ENUM_ORDER_TYPE _cmd, int _method = 0, double _level = 0.0) {
     Chart *_chart = Chart();
-    Indicator *_indi = Data();
+    Indi_Fractals *_indi = Data();
     bool _is_valid = _indi[CURR].IsValid() && _indi[PREV].IsValid() && _indi[PPREV].IsValid();
     bool _result = _is_valid;
     if (!_result) {
@@ -169,7 +169,7 @@ class Stg_Fractals : public Strategy {
    */
   double PriceLimit(ENUM_ORDER_TYPE _cmd, ENUM_ORDER_TYPE_VALUE _mode, int _method = 0, double _level = 0.0) {
     Chart *_chart = Chart();
-    Indicator *_indi = Data();
+    Indi_Fractals *_indi = Data();
     double _trail = _level * Market().GetPipSize();
     int _direction = Order::OrderDirection(_cmd, _mode);
     double _default_value = Market().GetCloseOffer(_cmd) + _trail * _method * _direction;
@@ -184,6 +184,11 @@ class Stg_Fractals : public Strategy {
       case 2:
         _result = _direction < 0 ? _indi.GetMinDbl(50) - _trail : _indi.GetMaxDbl(50) + _trail;
         break;
+      case 3: {
+        int _bar_count = (int) _level * 10;
+        _result = _direction > 0 ? _indi.GetPrice(PRICE_HIGH, _indi.GetHighest(_bar_count)) : _indi.GetPrice(PRICE_LOW, _indi.GetLowest(_bar_count));
+        break;
+      }
     }
     return fmax(_result, 0);
   }
