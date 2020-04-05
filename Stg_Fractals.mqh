@@ -80,6 +80,7 @@ class Stg_Fractals : public Strategy {
     sparams.SetSignals(_params.Fractals_SignalOpenMethod, _params.Fractals_SignalOpenMethod,
                        _params.Fractals_SignalOpenFilterMethod, _params.Fractals_SignalOpenBoostMethod,
                        _params.Fractals_SignalCloseMethod, _params.Fractals_SignalCloseMethod);
+    sparams.SetPriceLimits(_params.Fractals_PriceLimitMethod, _params.Fractals_PriceLimitLevel);
     sparams.SetMaxSpread(_params.Fractals_MaxSpread);
     // Initialize strategy instance.
     Strategy *_strat = new Stg_Fractals(sparams, "Fractals");
