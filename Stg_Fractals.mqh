@@ -75,7 +75,7 @@ class Stg_Fractals : public Strategy {
     // Initialize strategy parameters.
     FractalsParams fractals_params(_tf);
     StgParams sparams(new Trade(_tf, _Symbol), new Indi_Fractals(fractals_params), NULL, NULL);
-    sparams.logger.SetLevel(_log_level);
+    sparams.logger.Ptr().SetLevel(_log_level);
     sparams.SetMagicNo(_magic_no);
     sparams.SetSignals(_params.Fractals_SignalOpenMethod, _params.Fractals_SignalOpenMethod,
                        _params.Fractals_SignalOpenFilterMethod, _params.Fractals_SignalOpenBoostMethod,
