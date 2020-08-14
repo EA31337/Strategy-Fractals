@@ -6,14 +6,14 @@
 // User input params.
 INPUT int Fractals_Shift = 0;                   // Shift
 INPUT int Fractals_SignalOpenMethod = 3;        // Signal open method (-3-3)
-INPUT float Fractals_SignalOpenLevel = 0;      // Signal open level
+INPUT float Fractals_SignalOpenLevel = 0;       // Signal open level
 INPUT int Fractals_SignalOpenFilterMethod = 0;  // Signal open filter method
 INPUT int Fractals_SignalOpenBoostMethod = 0;   // Signal open boost method
 INPUT int Fractals_SignalCloseMethod = 3;       // Signal close method (-3-3)
-INPUT int Fractals_SignalCloseLevel = 0;        // Signal close level
+INPUT float Fractals_SignalCloseLevel = 0;      // Signal close level
 INPUT int Fractals_PriceLimitMethod = 0;        // Price limit method
-INPUT float Fractals_PriceLimitLevel = 0;      // Price limit level
-INPUT float Fractals_MaxSpread = 6.0;          // Max spread to trade (pips)
+INPUT float Fractals_PriceLimitLevel = 0;       // Price limit level
+INPUT float Fractals_MaxSpread = 6.0;           // Max spread to trade (pips)
 
 // Includes.
 #include <EA31337-classes/Indicators/Indi_Fractals.mqh>
@@ -23,14 +23,14 @@ INPUT float Fractals_MaxSpread = 6.0;          // Max spread to trade (pips)
 struct Stg_Fractals_Params : StgParams {
   int Fractals_Shift;
   int Fractals_SignalOpenMethod;
-  double Fractals_SignalOpenLevel;
+  float Fractals_SignalOpenLevel;
   int Fractals_SignalOpenFilterMethod;
   int Fractals_SignalOpenBoostMethod;
   int Fractals_SignalCloseMethod;
-  double Fractals_SignalCloseLevel;
+  float Fractals_SignalCloseLevel;
   int Fractals_PriceLimitMethod;
-  double Fractals_PriceLimitLevel;
-  double Fractals_MaxSpread;
+  float Fractals_PriceLimitLevel;
+  float Fractals_MaxSpread;
 
   // Constructor: Set default param values.
   Stg_Fractals_Params()
@@ -147,6 +147,6 @@ class Stg_Fractals : public Strategy {
         break;
       }
     }
-    return fmax(_result, 0);
+    return (float)fmax(_result, 0);
   }
 };
