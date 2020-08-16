@@ -1,19 +1,22 @@
-//+------------------------------------------------------------------+
-//|                  EA31337 - multi-strategy advanced trading robot |
-//|                       Copyright 2016-2020, 31337 Investments Ltd |
-//|                                       https://github.com/EA31337 |
-//+------------------------------------------------------------------+
+/*
+ * @file
+ * Defines default strategy parameter values for the given timeframe.
+ */
 
 // Defines strategy's parameter values for the given pair symbol and timeframe.
-struct Stg_Fractals_EURUSD_M5_Params : Stg_Fractals_Params {
-  Stg_Fractals_EURUSD_M5_Params() {
-    Fractals_Shift = 0;
-    Fractals_SignalOpenMethod = -61;
-    Fractals_SignalOpenLevel = 36;
-    Fractals_SignalCloseMethod = 1;
-    Fractals_SignalCloseLevel = 36;
-    Fractals_PriceLimitMethod = 0;
-    Fractals_PriceLimitLevel = 0;
-    Fractals_MaxSpread = 3;
+struct Stg_Fractals_Params_M5 : StgParams {
+  // Struct constructor.
+  Stg_Fractals_Params_M5() : StgParams(stg_fractals_defaults) {
+    lot_size = 0;
+    signal_open_method = 0;
+    signal_open_filter = 1;
+    signal_open_level = 0;
+    signal_open_boost = 0;
+    signal_close_method = 0;
+    signal_close_level = 0;
+    price_limit_method = 0;
+    price_limit_level = 2;
+    tick_filter_method = 1;
+    max_spread = 0;
   }
 } stg_fractals_m5;

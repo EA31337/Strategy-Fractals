@@ -3,8 +3,12 @@
  * Implements Fractals strategy.
  */
 
+// Includes.
+#include <EA31337-classes/Indicators/Indi_Fractals.mqh>
+#include <EA31337-classes/Strategy.mqh>
+
 // User input params.
-INPUT int Fractals_Shift = 0;                   // Shift
+INPUT float Fractals_LotSize = 0;               // Lot size
 INPUT int Fractals_SignalOpenMethod = 3;        // Signal open method (-3-3)
 INPUT float Fractals_SignalOpenLevel = 0;       // Signal open level
 INPUT int Fractals_SignalOpenFilterMethod = 0;  // Signal open filter method
@@ -13,42 +17,41 @@ INPUT int Fractals_SignalCloseMethod = 3;       // Signal close method (-3-3)
 INPUT float Fractals_SignalCloseLevel = 0;      // Signal close level
 INPUT int Fractals_PriceLimitMethod = 0;        // Price limit method
 INPUT float Fractals_PriceLimitLevel = 0;       // Price limit level
+INPUT int Fractals_TickFilterMethod = 0;        // Tick filter method
 INPUT float Fractals_MaxSpread = 6.0;           // Max spread to trade (pips)
+INPUT int Fractals_Shift = 0;                   // Shift
 
-// Includes.
-#include <EA31337-classes/Indicators/Indi_Fractals.mqh>
-#include <EA31337-classes/Strategy.mqh>
+// Structs.
+
+// Defines struct to store indicator parameter values.
+struct Indi_Fractals_Params : public FractalsParams {
+  // Struct constructors.
+  void Indi_Fractals_Params(FractalsParams &_params, ENUM_TIMEFRAMES _tf) : FractalsParams(_params, _tf) {}
+};
+
+// Defines struct with default user strategy values.
+struct Stg_Fractals_Params_Defaults : StgParams {
+  Stg_Fractals_Params_Defaults()
+      : StgParams(::Fractals_SignalOpenMethod, ::Fractals_SignalOpenFilterMethod, ::Fractals_SignalOpenLevel,
+                  ::Fractals_SignalOpenBoostMethod, ::Fractals_SignalCloseMethod, ::Fractals_SignalCloseLevel,
+                  ::Fractals_PriceLimitMethod, ::Fractals_PriceLimitLevel, ::Fractals_TickFilterMethod,
+                  ::Fractals_MaxSpread, ::Fractals_Shift) {}
+} stg_fractals_defaults;
 
 // Struct to define strategy parameters to override.
 struct Stg_Fractals_Params : StgParams {
-  int Fractals_Shift;
-  int Fractals_SignalOpenMethod;
-  float Fractals_SignalOpenLevel;
-  int Fractals_SignalOpenFilterMethod;
-  int Fractals_SignalOpenBoostMethod;
-  int Fractals_SignalCloseMethod;
-  float Fractals_SignalCloseLevel;
-  int Fractals_PriceLimitMethod;
-  float Fractals_PriceLimitLevel;
-  float Fractals_MaxSpread;
+  StgParams sparams;
 
-  // Constructor: Set default param values.
-  Stg_Fractals_Params()
-      : Fractals_Shift(::Fractals_Shift),
-        Fractals_SignalOpenMethod(::Fractals_SignalOpenMethod),
-        Fractals_SignalOpenLevel(::Fractals_SignalOpenLevel),
-        Fractals_SignalOpenFilterMethod(::Fractals_SignalOpenFilterMethod),
-        Fractals_SignalOpenBoostMethod(::Fractals_SignalOpenBoostMethod),
-        Fractals_SignalCloseMethod(::Fractals_SignalCloseMethod),
-        Fractals_SignalCloseLevel(::Fractals_SignalCloseLevel),
-        Fractals_PriceLimitMethod(::Fractals_PriceLimitMethod),
-        Fractals_PriceLimitLevel(::Fractals_PriceLimitLevel),
-        Fractals_MaxSpread(::Fractals_MaxSpread) {}
+  // Struct constructors.
+  Stg_Fractals_Params(Indi_Fractals_Params &_iparams, StgParams &_sparams) : sparams(stg_fractals_defaults) {
+    sparams = _sparams;
+  }
 };
 
 // Loads pair specific param values.
 #include "sets/EURUSD_H1.h"
 #include "sets/EURUSD_H4.h"
+#include "sets/EURUSD_H8.h"
 #include "sets/EURUSD_M1.h"
 #include "sets/EURUSD_M15.h"
 #include "sets/EURUSD_M30.h"
@@ -60,23 +63,21 @@ class Stg_Fractals : public Strategy {
 
   static Stg_Fractals *Init(ENUM_TIMEFRAMES _tf = NULL, long _magic_no = NULL, ENUM_LOG_LEVEL _log_level = V_INFO) {
     // Initialize strategy initial values.
-    Stg_Fractals_Params _params;
+    StgParams _stg_params(stg_fractals_defaults);
     if (!Terminal::IsOptimization()) {
-      SetParamsByTf<Stg_Fractals_Params>(_params, _tf, stg_fractals_m1, stg_fractals_m5, stg_fractals_m15,
-                                         stg_fractals_m30, stg_fractals_h1, stg_fractals_h4, stg_fractals_h4);
+      SetParamsByTf<StgParams>(_stg_params, _tf, stg_fractals_m1, stg_fractals_m5, stg_fractals_m15, stg_fractals_m30,
+                               stg_fractals_h1, stg_fractals_h4, stg_fractals_h8);
     }
+    // Initialize indicator.
+    FractalsParams _indi_params(_tf);
+    _stg_params.SetIndicator(new Indi_Fractals(_indi_params));
     // Initialize strategy parameters.
-    FractalsParams fractals_params(_tf);
-    StgParams sparams(new Trade(_tf, _Symbol), new Indi_Fractals(fractals_params), NULL, NULL);
-    sparams.logger.Ptr().SetLevel(_log_level);
-    sparams.SetMagicNo(_magic_no);
-    sparams.SetSignals(_params.Fractals_SignalOpenMethod, _params.Fractals_SignalOpenMethod,
-                       _params.Fractals_SignalOpenFilterMethod, _params.Fractals_SignalOpenBoostMethod,
-                       _params.Fractals_SignalCloseMethod, _params.Fractals_SignalCloseMethod);
-    sparams.SetPriceLimits(_params.Fractals_PriceLimitMethod, _params.Fractals_PriceLimitLevel);
-    sparams.SetMaxSpread(_params.Fractals_MaxSpread);
+    _stg_params.GetLog().SetLevel(_log_level);
+    _stg_params.SetMagicNo(_magic_no);
+    _stg_params.SetTf(_tf, _Symbol);
     // Initialize strategy instance.
-    Strategy *_strat = new Stg_Fractals(sparams, "Fractals");
+    Strategy *_strat = new Stg_Fractals(_stg_params, "Fractals");
+    _stg_params.SetStops(_strat, _strat);
     return _strat;
   }
 
