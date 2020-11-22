@@ -15,8 +15,8 @@ INPUT int Fractals_SignalOpenFilterMethod = 0;  // Signal open filter method
 INPUT int Fractals_SignalOpenBoostMethod = 0;   // Signal open boost method
 INPUT int Fractals_SignalCloseMethod = 3;       // Signal close method (-3-3)
 INPUT float Fractals_SignalCloseLevel = 0;      // Signal close level
-INPUT int Fractals_PriceLimitMethod = 0;        // Price limit method
-INPUT float Fractals_PriceLimitLevel = 0;       // Price limit level
+INPUT int Fractals_PriceStopMethod = 0;         // Price stop method
+INPUT float Fractals_PriceStopLevel = 0;        // Price stop level
 INPUT int Fractals_TickFilterMethod = 0;        // Tick filter method
 INPUT float Fractals_MaxSpread = 6.0;           // Max spread to trade (pips)
 INPUT int Fractals_Shift = 0;                   // Shift
@@ -34,7 +34,7 @@ struct Stg_Fractals_Params_Defaults : StgParams {
   Stg_Fractals_Params_Defaults()
       : StgParams(::Fractals_SignalOpenMethod, ::Fractals_SignalOpenFilterMethod, ::Fractals_SignalOpenLevel,
                   ::Fractals_SignalOpenBoostMethod, ::Fractals_SignalCloseMethod, ::Fractals_SignalCloseLevel,
-                  ::Fractals_PriceLimitMethod, ::Fractals_PriceLimitLevel, ::Fractals_TickFilterMethod,
+                  ::Fractals_PriceStopMethod, ::Fractals_PriceStopLevel, ::Fractals_TickFilterMethod,
                   ::Fractals_MaxSpread, ::Fractals_Shift) {}
 } stg_fractals_defaults;
 
@@ -122,9 +122,9 @@ class Stg_Fractals : public Strategy {
   }
 
   /**
-   * Gets price limit value for profit take or stop loss.
+   * Gets price stop value for profit take or stop loss.
    */
-  float PriceLimit(ENUM_ORDER_TYPE _cmd, ENUM_ORDER_TYPE_VALUE _mode, int _method = 0, float _level = 0.0) {
+  float PriceStop(ENUM_ORDER_TYPE _cmd, ENUM_ORDER_TYPE_VALUE _mode, int _method = 0, float _level = 0.0) {
     Chart *_chart = Chart();
     Indi_Fractals *_indi = Data();
     double _trail = _level * Market().GetPipSize();
