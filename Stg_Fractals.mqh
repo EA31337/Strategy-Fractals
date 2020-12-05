@@ -100,22 +100,20 @@ class Stg_Fractals : public Strategy {
       return false;
     }
     double level = _level * Chart().GetPipSize();
-    bool lower = (_indi[CURR].value[LINE_LOWER] != 0.0 || _indi[PREV].value[LINE_LOWER] != 0.0 ||
-                  _indi[PPREV].value[LINE_LOWER] != 0.0);
-    bool upper = (_indi[CURR].value[LINE_UPPER] != 0.0 || _indi[PREV].value[LINE_UPPER] != 0.0 ||
-                  _indi[PPREV].value[LINE_UPPER] != 0.0);
+    bool lower = (_indi[CURR][LINE_LOWER] != 0.0 || _indi[PREV][LINE_LOWER] != 0.0 || _indi[PPREV][LINE_LOWER] != 0.0);
+    bool upper = (_indi[CURR][LINE_UPPER] != 0.0 || _indi[PREV][LINE_UPPER] != 0.0 || _indi[PPREV][LINE_UPPER] != 0.0);
     switch (_cmd) {
       case ORDER_TYPE_BUY:
         _result = lower;
-        if (METHOD(_method, 0)) _result &= _indi[CURR].value[LINE_LOWER] != 0.0;
-        if (METHOD(_method, 1)) _result &= _indi[PREV].value[LINE_LOWER] != 0.0;
-        if (METHOD(_method, 2)) _result &= _indi[PPREV].value[LINE_LOWER] != 0.0;
+        if (METHOD(_method, 0)) _result &= _indi[CURR][LINE_LOWER] != 0.0;
+        if (METHOD(_method, 1)) _result &= _indi[PREV][LINE_LOWER] != 0.0;
+        if (METHOD(_method, 2)) _result &= _indi[PPREV][LINE_LOWER] != 0.0;
         break;
       case ORDER_TYPE_SELL:
         _result = upper;
-        if (METHOD(_method, 0)) _result &= _indi[CURR].value[LINE_UPPER] != 0.0;
-        if (METHOD(_method, 1)) _result &= _indi[PREV].value[LINE_UPPER] != 0.0;
-        if (METHOD(_method, 2)) _result &= _indi[PPREV].value[LINE_UPPER] != 0.0;
+        if (METHOD(_method, 0)) _result &= _indi[CURR][LINE_UPPER] != 0.0;
+        if (METHOD(_method, 1)) _result &= _indi[PREV][LINE_UPPER] != 0.0;
+        if (METHOD(_method, 2)) _result &= _indi[PPREV][LINE_UPPER] != 0.0;
         break;
     }
     return _result;
@@ -133,7 +131,7 @@ class Stg_Fractals : public Strategy {
     double _result = _default_value;
     switch (_method) {
       case 1:
-        _result = _direction < 0 ? _indi[PREV].value[LINE_LOWER] - _trail : _indi[PREV].value[LINE_UPPER] + _trail;
+        _result = _direction < 0 ? _indi[PREV][LINE_LOWER] - _trail : _indi[PREV][LINE_UPPER] + _trail;
         break;
       case 2:
         _result = _direction < 0 ? _indi.GetMinDbl(20) - _trail : _indi.GetMaxDbl(20) + _trail;
