@@ -3,10 +3,6 @@
  * Implements Fractals strategy.
  */
 
-// Includes.
-#include <EA31337-classes/Indicators/Indi_Fractals.mqh>
-#include <EA31337-classes/Strategy.mqh>
-
 // User input params.
 INPUT float Fractals_LotSize = 0;               // Lot size
 INPUT int Fractals_SignalOpenMethod = 3;        // Signal open method (-3-3)
