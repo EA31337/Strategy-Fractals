@@ -130,10 +130,10 @@ class Stg_Fractals : public Strategy {
         _result = _direction < 0 ? _indi[PREV][LINE_LOWER] - _trail : _indi[PREV][LINE_UPPER] + _trail;
         break;
       case 2:
-        _result = _direction < 0 ? _indi.GetMinDbl(20) - _trail : _indi.GetMaxDbl(20) + _trail;
+        _result = _direction < 0 ? _indi.GetMin<double>(20) - _trail : _indi.GetMax<double>(20) + _trail;
         break;
       case 3:
-        _result = _direction < 0 ? _indi.GetMinDbl(50) - _trail : _indi.GetMaxDbl(50) + _trail;
+        _result = _direction < 0 ? _indi.GetMin<double>(50) - _trail : _indi.GetMax<double>(50) + _trail;
         break;
       case 4: {
         int _bar_count = (int)_level * 10;
