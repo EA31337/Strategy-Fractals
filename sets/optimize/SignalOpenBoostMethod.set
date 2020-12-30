@@ -1,0 +1,7 @@
+; Optimize signal open boost method param.
+Fractals_SignalOpenBoostMethod,1=1
+Fractals_SignalOpenBoostMethod,2=1
+Fractals_SignalOpenBoostMethod,3=8
+Fractals_SignalOpenBoostMethod,F=1
+Fractals_SignalOpenFilterMethod=1
+Fractals_TickFilterMethod=1

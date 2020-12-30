@@ -1,0 +1,6 @@
+; Optimize tick filter method param.
+Fractals_SignalOpenFilterMethod=1
+Fractals_TickFilterMethod,1=1
+Fractals_TickFilterMethod,2=1
+Fractals_TickFilterMethod,3=32
+Fractals_TickFilterMethod,F=1

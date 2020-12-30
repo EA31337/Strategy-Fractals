@@ -1,0 +1,7 @@
+; Optimize price stop level param.
+Fractals_PriceStopLevel,1=10
+Fractals_PriceStopLevel,2=5
+Fractals_PriceStopLevel,3=40
+Fractals_PriceStopLevel,F=1
+Fractals_SignalOpenFilterMethod=1
+Fractals_TickFilterMethod=1

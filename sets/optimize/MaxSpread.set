@@ -1,0 +1,7 @@
+; Optimize max spread param.
+Fractals_MaxSpread,1=10
+Fractals_MaxSpread,2=10
+Fractals_MaxSpread,3=40
+Fractals_MaxSpread,F=1
+Fractals_SignalOpenFilterMethod=1
+Fractals_TickFilterMethod=1

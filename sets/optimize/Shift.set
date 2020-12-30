@@ -1,0 +1,7 @@
+; Optimize strategy shift param.
+Fractals_Shift,1=0
+Fractals_Shift,2=1
+Fractals_Shift,3=1
+Fractals_Shift,F=1
+Fractals_SignalOpenFilterMethod=1
+Fractals_TickFilterMethod=1

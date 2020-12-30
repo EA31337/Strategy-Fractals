@@ -1,0 +1,7 @@
+; Optimize signal open level param.
+Fractals_SignalOpenFilterMethod=1
+Fractals_SignalOpenLevel,1=0
+Fractals_SignalOpenLevel,2=1
+Fractals_SignalOpenLevel,3=10
+Fractals_SignalOpenLevel,F=1
+Fractals_TickFilterMethod=1

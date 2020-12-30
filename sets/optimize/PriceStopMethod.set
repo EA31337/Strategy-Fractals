@@ -1,0 +1,8 @@
+; Optimize price stop method param.
+Fractals_PriceStopMethod,1=0
+Fractals_PriceStopMethod,2=1
+Fractals_PriceStopMethod,3=4
+Fractals_PriceStopMethod,F=1
+Fractals_OrderCloseTime=-20
+Fractals_SignalOpenFilterMethod=1
+Fractals_TickFilterMethod=1

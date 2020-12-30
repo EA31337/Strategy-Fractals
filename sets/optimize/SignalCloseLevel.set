@@ -1,0 +1,7 @@
+; Optimize signal close level param.
+Fractals_SignalCloseLevel,1=10
+Fractals_SignalCloseLevel,2=5
+Fractals_SignalCloseLevel,3=40
+Fractals_SignalCloseLevel,F=1
+Fractals_SignalOpenFilterMethod=1
+Fractals_TickFilterMethod=1

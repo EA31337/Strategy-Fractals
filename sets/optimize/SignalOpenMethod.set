@@ -1,0 +1,7 @@
+; Optimize signal open method param.
+Fractals_SignalOpenFilterMethod=1
+Fractals_SignalOpenMethod,1=-4
+Fractals_SignalOpenMethod,2=1
+Fractals_SignalOpenMethod,3=4
+Fractals_SignalOpenMethod,F=1
+Fractals_TickFilterMethod=1

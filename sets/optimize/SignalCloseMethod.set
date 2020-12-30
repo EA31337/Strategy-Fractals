@@ -1,0 +1,7 @@
+; Optimize signal close method param.
+Fractals_SignalCloseMethod,1=-4
+Fractals_SignalCloseMethod,2=1
+Fractals_SignalCloseMethod,3=4
+Fractals_SignalCloseMethod,F=1
+Fractals_SignalOpenFilterMethod=1
+Fractals_TickFilterMethod=1
