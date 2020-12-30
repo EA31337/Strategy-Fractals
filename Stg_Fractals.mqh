@@ -16,6 +16,7 @@ INPUT float Fractals_PriceStopLevel = 0;        // Price stop level
 INPUT int Fractals_TickFilterMethod = 0;        // Tick filter method
 INPUT float Fractals_MaxSpread = 6.0;           // Max spread to trade (pips)
 INPUT int Fractals_Shift = 0;                   // Shift
+INPUT int Fractals_OrderCloseTime = -10;        // Order close time in mins (>0) or bars (<0)
 
 // Structs.
 
@@ -31,7 +32,7 @@ struct Stg_Fractals_Params_Defaults : StgParams {
       : StgParams(::Fractals_SignalOpenMethod, ::Fractals_SignalOpenFilterMethod, ::Fractals_SignalOpenLevel,
                   ::Fractals_SignalOpenBoostMethod, ::Fractals_SignalCloseMethod, ::Fractals_SignalCloseLevel,
                   ::Fractals_PriceStopMethod, ::Fractals_PriceStopLevel, ::Fractals_TickFilterMethod,
-                  ::Fractals_MaxSpread, ::Fractals_Shift) {}
+                  ::Fractals_MaxSpread, ::Fractals_Shift, ::Fractals_OrderCloseTime) {}
 } stg_fractals_defaults;
 
 // Struct to define strategy parameters to override.
