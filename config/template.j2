@@ -6,9 +6,6 @@
 // Defines indicator's parameter values for the given pair symbol and timeframe.
 struct Indi_Fractals_Params_{{ Timeframe }} : Indi_Fractals_Params {
   Indi_Fractals_Params_{{ Timeframe }}() : Indi_Fractals_Params(indi_fractals_defaults, PERIOD_{{ Timeframe }}) {
-    applied_price = (ENUM_APPLIED_PRICE){{ Fractals_Indi_Fractals_Applied_Price | default(0) }};
-    ma_method = {{ Fractals_Indi_Fractals_MA_Method | default(0) }};
-    period = {{ Fractals_Indi_Fractals_Period | default(0) }};
     shift = {{ Fractals_Shift | default(0) }};
   }
 } indi_fractals_{{ Timeframe | lower }};
