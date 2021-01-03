@@ -122,7 +122,7 @@ class Stg_Fractals : public Strategy {
    * Gets price stop value for profit take or stop loss.
    */
   float PriceStop(ENUM_ORDER_TYPE _cmd, ENUM_ORDER_TYPE_VALUE _mode, int _method = 0, float _level = 0.0) {
-    Chart *_chart = Chart();
+    Chart *_chart = sparams.GetChart();
     Indi_Fractals *_indi = Data();
     double _trail = _level * Market().GetPipSize();
     int _direction = Order::OrderDirection(_cmd, _mode);
