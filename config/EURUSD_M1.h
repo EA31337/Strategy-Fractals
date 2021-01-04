@@ -3,6 +3,13 @@
  * Defines default strategy parameter values for the given timeframe.
  */
 
+// Defines indicator's parameter values for the given pair symbol and timeframe.
+struct Indi_Fractals_Params_M1 : Indi_Fractals_Params {
+  Indi_Fractals_Params_M1() : Indi_Fractals_Params(indi_fractals_defaults, PERIOD_M1) {
+    shift = {{Fractals_Shift | default(0)}};
+  }
+} indi_fractals_m1;
+
 // Defines strategy's parameter values for the given pair symbol and timeframe.
 struct Stg_Fractals_Params_M1 : StgParams {
   // Struct constructor.

@@ -17,8 +17,16 @@ INPUT int Fractals_TickFilterMethod = 1;        // Tick filter method
 INPUT float Fractals_MaxSpread = 4.0;           // Max spread to trade (pips)
 INPUT int Fractals_Shift = 0;                   // Shift
 INPUT int Fractals_OrderCloseTime = -20;        // Order close time in mins (>0) or bars (<0)
+INPUT string __Fractals_Indi_Fractals_Parameters__ =
+    "-- Fractals strategy: Fractals indicator params --";  // >>> Fractals strategy: Fractals indicator <<<
+INPUT int Fractals_Indi_Fractals_Shift = 0;                // Shift
 
 // Structs.
+
+// Defines struct with default user indicator values.
+struct Indi_Fractals_Params_Defaults : FractalsParams {
+  Indi_Fractals_Params_Defaults() : FractalsParams(::Fractals_Indi_Fractals_Shift) {}
+} indi_fractals_defaults;
 
 // Defines struct to store indicator parameter values.
 struct Indi_Fractals_Params : public FractalsParams {
