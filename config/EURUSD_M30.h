@@ -6,7 +6,7 @@
 // Defines indicator's parameter values for the given pair symbol and timeframe.
 struct Indi_Fractals_Params_M30 : Indi_Fractals_Params {
   Indi_Fractals_Params_M30() : Indi_Fractals_Params(indi_fractals_defaults, PERIOD_M30) {
-    shift = {{Fractals_Shift | default(0)}};
+    shift = 0;
   }
 } indi_fractals_m30;
 
