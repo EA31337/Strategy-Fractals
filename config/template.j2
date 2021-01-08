@@ -22,7 +22,7 @@ struct Stg_Fractals_Params_{{ Timeframe }} : StgParams {
     signal_close_method = {{ Fractals_SignalCloseMethod | default(0) }};
     signal_close_level = (float){{ Fractals_SignalCloseLevel | default(0) }};
     price_stop_method = {{ Fractals_PriceStopMethod | default(0) }};
-    price_stop_level = {{ Fractals_SignalCloseLevel | default(1) }};
+    price_stop_level = (float){{ Fractals_SignalCloseLevel | default(1) }};
     tick_filter_method = {{ Fractals_TickFilterMethod  | default(1) }};
     max_spread = {{ Fractals_MaxSpread | default(0) }};
   }
