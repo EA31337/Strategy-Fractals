@@ -83,7 +83,6 @@ class Stg_Fractals : public Strategy {
     _stg_params.SetTf(_tf, _Symbol);
     // Initialize strategy instance.
     Strategy *_strat = new Stg_Fractals(_stg_params, "Fractals");
-    _stg_params.SetStops(_strat, _strat);
     return _strat;
   }
 
