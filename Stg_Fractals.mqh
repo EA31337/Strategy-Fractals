@@ -70,10 +70,10 @@ class Stg_Fractals : public Strategy {
   static Stg_Fractals *Init(ENUM_TIMEFRAMES _tf = NULL, long _magic_no = NULL, ENUM_LOG_LEVEL _log_level = V_INFO) {
     // Initialize strategy initial values.
     StgParams _stg_params(stg_fractals_defaults);
-    if (!Terminal::IsOptimization()) {
-      SetParamsByTf<StgParams>(_stg_params, _tf, stg_fractals_m1, stg_fractals_m5, stg_fractals_m15, stg_fractals_m30,
-                               stg_fractals_h1, stg_fractals_h4, stg_fractals_h8);
-    }
+#ifdef __config__
+    SetParamsByTf<StgParams>(_stg_params, _tf, stg_fractals_m1, stg_fractals_m5, stg_fractals_m15, stg_fractals_m30,
+                             stg_fractals_h1, stg_fractals_h4, stg_fractals_h8);
+#endif
     // Initialize indicator.
     FractalsParams _indi_params(_tf);
     _stg_params.SetIndicator(new Indi_Fractals(_indi_params));
