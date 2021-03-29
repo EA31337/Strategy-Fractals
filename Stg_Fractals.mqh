@@ -16,7 +16,7 @@ INPUT int Fractals_PriceStopMethod = 0;                                   // Pri
 INPUT float Fractals_PriceStopLevel = 0;                                  // Price stop level
 INPUT int Fractals_TickFilterMethod = 1;                                  // Tick filter method
 INPUT float Fractals_MaxSpread = 4.0;                                     // Max spread to trade (pips)
-INPUT int Fractals_Shift = 0;                                             // Shift
+INPUT short Fractals_Shift = 0;                                           // Shift
 INPUT int Fractals_OrderCloseTime = -20;                                  // Order close time in mins (>0) or bars (<0)
 INPUT string __Fractals_Indi_Fractals_Parameters__ =
     "-- Fractals strategy: Fractals indicator params --";  // >>> Fractals strategy: Fractals indicator <<<
