@@ -6,13 +6,13 @@
 // User input params.
 INPUT string __Fractals_Parameters__ = "-- Fractals strategy params --";  // >>> FRACTALS <<<
 INPUT float Fractals_LotSize = 0;                                         // Lot size
-INPUT int Fractals_SignalOpenMethod = 0;                                  // Signal open method (-3-3)
+INPUT int Fractals_SignalOpenMethod = 2;                                  // Signal open method (-127-127)
 INPUT float Fractals_SignalOpenLevel = 0.0f;                              // Signal open level
-INPUT int Fractals_SignalOpenFilterMethod = 1;                            // Signal open filter method
+INPUT int Fractals_SignalOpenFilterMethod = 32;                            // Signal open filter method
 INPUT int Fractals_SignalOpenBoostMethod = 0;                             // Signal open boost method
-INPUT int Fractals_SignalCloseMethod = 3;                                 // Signal close method (-3-3)
+INPUT int Fractals_SignalCloseMethod = 2;                                 // Signal close method (-127-127)
 INPUT float Fractals_SignalCloseLevel = 0.0f;                             // Signal close level
-INPUT int Fractals_PriceStopMethod = 0;                                   // Price stop method
+INPUT int Fractals_PriceStopMethod = 1;                                   // Price stop method
 INPUT float Fractals_PriceStopLevel = 0;                                  // Price stop level
 INPUT int Fractals_TickFilterMethod = 1;                                  // Tick filter method
 INPUT float Fractals_MaxSpread = 4.0;                                     // Max spread to trade (pips)
@@ -123,35 +123,5 @@ class Stg_Fractals : public Strategy {
         break;
     }
     return _result;
-  }
-
-  /**
-   * Gets price stop value for profit take or stop loss.
-   */
-  float PriceStop(ENUM_ORDER_TYPE _cmd, ENUM_ORDER_TYPE_VALUE _mode, int _method = 0, float _level = 0.0) {
-    Chart *_chart = trade.GetChart();
-    Indi_Fractals *_indi = GetIndicator();
-    double _trail = _level * Market().GetPipSize();
-    int _direction = Order::OrderDirection(_cmd, _mode);
-    double _default_value = Market().GetCloseOffer(_cmd) + _trail * _method * _direction;
-    double _result = _default_value;
-    switch (_method) {
-      case 1:
-        _result = _direction < 0 ? _indi[PREV][(int)LINE_LOWER] - _trail : _indi[PREV][(int)LINE_UPPER] + _trail;
-        break;
-      case 2:
-        _result = _direction < 0 ? _indi.GetMin<double>(20) - _trail : _indi.GetMax<double>(20) + _trail;
-        break;
-      case 3:
-        _result = _direction < 0 ? _indi.GetMin<double>(50) - _trail : _indi.GetMax<double>(50) + _trail;
-        break;
-      case 4: {
-        int _bar_count = (int)_level * 10;
-        _result = _direction > 0 ? _indi.GetPrice(PRICE_HIGH, _indi.GetHighest<double>(_bar_count))
-                                 : _indi.GetPrice(PRICE_LOW, _indi.GetLowest<double>(_bar_count));
-        break;
-      }
-    }
-    return (float)fmax(_result, 0);
   }
 };
