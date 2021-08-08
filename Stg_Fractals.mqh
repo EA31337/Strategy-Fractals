@@ -4,23 +4,22 @@
  */
 
 // User input params.
-INPUT string __Fractals_Parameters__ = "-- Fractals strategy params --";  // >>> FRACTALS <<<
-INPUT float Fractals_LotSize = 0;                                         // Lot size
-INPUT int Fractals_SignalOpenMethod = 2;                                  // Signal open method (-127-127)
-INPUT float Fractals_SignalOpenLevel = 0.0f;                              // Signal open level
-INPUT int Fractals_SignalOpenFilterMethod = 32;                           // Signal open filter method
-INPUT int Fractals_SignalOpenBoostMethod = 0;                             // Signal open boost method
-INPUT int Fractals_SignalCloseMethod = 2;                                 // Signal close method (-127-127)
-INPUT float Fractals_SignalCloseLevel = 0.0f;                             // Signal close level
-INPUT int Fractals_PriceStopMethod = 1;                                   // Price stop method
-INPUT float Fractals_PriceStopLevel = 0;                                  // Price stop level
-INPUT int Fractals_TickFilterMethod = 1;                                  // Tick filter method
-INPUT float Fractals_MaxSpread = 4.0;                                     // Max spread to trade (pips)
-INPUT short Fractals_Shift = 0;                                           // Shift
-INPUT int Fractals_OrderCloseTime = -20;                                  // Order close time in mins (>0) or bars (<0)
-INPUT string __Fractals_Indi_Fractals_Parameters__ =
-    "-- Fractals strategy: Fractals indicator params --";  // >>> Fractals strategy: Fractals indicator <<<
-INPUT int Fractals_Indi_Fractals_Shift = 0;                // Shift
+INPUT_GROUP("Fractals strategy: strategy params");
+INPUT float Fractals_LotSize = 0;                // Lot size
+INPUT int Fractals_SignalOpenMethod = 2;         // Signal open method (-127-127)
+INPUT float Fractals_SignalOpenLevel = 0.0f;     // Signal open level
+INPUT int Fractals_SignalOpenFilterMethod = 32;  // Signal open filter method
+INPUT int Fractals_SignalOpenBoostMethod = 0;    // Signal open boost method
+INPUT int Fractals_SignalCloseMethod = 2;        // Signal close method (-127-127)
+INPUT float Fractals_SignalCloseLevel = 0.0f;    // Signal close level
+INPUT int Fractals_PriceStopMethod = 1;          // Price stop method
+INPUT float Fractals_PriceStopLevel = 0;         // Price stop level
+INPUT int Fractals_TickFilterMethod = 1;         // Tick filter method
+INPUT float Fractals_MaxSpread = 4.0;            // Max spread to trade (pips)
+INPUT short Fractals_Shift = 0;                  // Shift
+INPUT int Fractals_OrderCloseTime = -20;         // Order close time in mins (>0) or bars (<0)
+INPUT_GROUP("Fractals strategy: Fractals indicator params");
+INPUT int Fractals_Indi_Fractals_Shift = 0;  // Shift
 
 // Structs.
 
