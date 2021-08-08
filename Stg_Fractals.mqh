@@ -11,6 +11,7 @@ INPUT float Fractals_SignalOpenLevel = 0.0f;     // Signal open level
 INPUT int Fractals_SignalOpenFilterMethod = 32;  // Signal open filter method
 INPUT int Fractals_SignalOpenBoostMethod = 0;    // Signal open boost method
 INPUT int Fractals_SignalCloseMethod = 2;        // Signal close method (-127-127)
+INPUT int Fractals_SignalCloseFilter = 0;        // Signal close filter (-127-127)
 INPUT float Fractals_SignalCloseLevel = 0.0f;    // Signal close level
 INPUT int Fractals_PriceStopMethod = 1;          // Price stop method
 INPUT float Fractals_PriceStopLevel = 0;         // Price stop level
@@ -38,9 +39,9 @@ struct Indi_Fractals_Params : public FractalsParams {
 struct Stg_Fractals_Params_Defaults : StgParams {
   Stg_Fractals_Params_Defaults()
       : StgParams(::Fractals_SignalOpenMethod, ::Fractals_SignalOpenFilterMethod, ::Fractals_SignalOpenLevel,
-                  ::Fractals_SignalOpenBoostMethod, ::Fractals_SignalCloseMethod, ::Fractals_SignalCloseLevel,
-                  ::Fractals_PriceStopMethod, ::Fractals_PriceStopLevel, ::Fractals_TickFilterMethod,
-                  ::Fractals_MaxSpread, ::Fractals_Shift, ::Fractals_OrderCloseTime) {}
+                  ::Fractals_SignalOpenBoostMethod, ::Fractals_SignalCloseMethod, ::Fractals_SignalCloseFilter,
+                  ::Fractals_SignalCloseLevel, ::Fractals_PriceStopMethod, ::Fractals_PriceStopLevel,
+                  ::Fractals_TickFilterMethod, ::Fractals_MaxSpread, ::Fractals_Shift, ::Fractals_OrderCloseTime) {}
 } stg_fractals_defaults;
 
 // Struct to define strategy parameters to override.
