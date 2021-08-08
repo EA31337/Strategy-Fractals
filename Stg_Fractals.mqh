@@ -18,6 +18,8 @@ INPUT float Fractals_PriceStopLevel = 0;         // Price stop level
 INPUT int Fractals_TickFilterMethod = 1;         // Tick filter method
 INPUT float Fractals_MaxSpread = 4.0;            // Max spread to trade (pips)
 INPUT short Fractals_Shift = 0;                  // Shift
+INPUT float Fractals_OrderCloseLoss = 0;         // Order close loss
+INPUT float Fractals_OrderCloseProfit = 0;       // Order close profit
 INPUT int Fractals_OrderCloseTime = -20;         // Order close time in mins (>0) or bars (<0)
 INPUT_GROUP("Fractals strategy: Fractals indicator params");
 INPUT int Fractals_Indi_Fractals_Shift = 0;  // Shift
@@ -41,7 +43,11 @@ struct Stg_Fractals_Params_Defaults : StgParams {
       : StgParams(::Fractals_SignalOpenMethod, ::Fractals_SignalOpenFilterMethod, ::Fractals_SignalOpenLevel,
                   ::Fractals_SignalOpenBoostMethod, ::Fractals_SignalCloseMethod, ::Fractals_SignalCloseFilter,
                   ::Fractals_SignalCloseLevel, ::Fractals_PriceStopMethod, ::Fractals_PriceStopLevel,
-                  ::Fractals_TickFilterMethod, ::Fractals_MaxSpread, ::Fractals_Shift, ::Fractals_OrderCloseTime) {}
+                  ::Fractals_TickFilterMethod, ::Fractals_MaxSpread, ::Fractals_Shift) {
+    Set(STRAT_PARAM_OCL, Fractals_OrderCloseLoss);
+    Set(STRAT_PARAM_OCP, Fractals_OrderCloseProfit);
+    Set(STRAT_PARAM_OCT, Fractals_OrderCloseTime);
+  }
 } stg_fractals_defaults;
 
 // Struct to define strategy parameters to override.
