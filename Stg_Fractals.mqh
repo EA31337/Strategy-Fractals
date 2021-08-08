@@ -8,7 +8,7 @@ INPUT string __Fractals_Parameters__ = "-- Fractals strategy params --";  // >>>
 INPUT float Fractals_LotSize = 0;                                         // Lot size
 INPUT int Fractals_SignalOpenMethod = 2;                                  // Signal open method (-127-127)
 INPUT float Fractals_SignalOpenLevel = 0.0f;                              // Signal open level
-INPUT int Fractals_SignalOpenFilterMethod = 32;                            // Signal open filter method
+INPUT int Fractals_SignalOpenFilterMethod = 32;                           // Signal open filter method
 INPUT int Fractals_SignalOpenBoostMethod = 0;                             // Signal open boost method
 INPUT int Fractals_SignalCloseMethod = 2;                                 // Signal close method (-127-127)
 INPUT float Fractals_SignalCloseLevel = 0.0f;                             // Signal close level
@@ -97,8 +97,7 @@ class Stg_Fractals : public Strategy {
   bool SignalOpen(ENUM_ORDER_TYPE _cmd, int _method = 0, float _level = 0.0f, int _shift = 0) {
     Chart *_chart = trade.GetChart();
     Indi_Fractals *_indi = GetIndicator();
-    bool _is_valid = _indi[CURR].IsValid() && _indi[PREV].IsValid() && _indi[PPREV].IsValid();
-    bool _result = _is_valid;
+    bool _result = _indi.GetFlag(INDI_ENTRY_FLAG_IS_VALID);
     if (!_result) {
       // Returns false when indicator data is not valid.
       return false;
