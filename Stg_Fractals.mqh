@@ -9,6 +9,7 @@ INPUT float Fractals_LotSize = 0;                // Lot size
 INPUT int Fractals_SignalOpenMethod = 2;         // Signal open method (-127-127)
 INPUT float Fractals_SignalOpenLevel = 0.0f;     // Signal open level
 INPUT int Fractals_SignalOpenFilterMethod = 32;  // Signal open filter method
+INPUT int Fractals_SignalOpenFilterTime = 6;     // Signal open filter time
 INPUT int Fractals_SignalOpenBoostMethod = 0;    // Signal open boost method
 INPUT int Fractals_SignalCloseMethod = 2;        // Signal close method (-127-127)
 INPUT int Fractals_SignalCloseFilter = 0;        // Signal close filter (-127-127)
@@ -47,6 +48,7 @@ struct Stg_Fractals_Params_Defaults : StgParams {
     Set(STRAT_PARAM_OCL, Fractals_OrderCloseLoss);
     Set(STRAT_PARAM_OCP, Fractals_OrderCloseProfit);
     Set(STRAT_PARAM_OCT, Fractals_OrderCloseTime);
+    Set(STRAT_PARAM_SOFT, Fractals_SignalOpenFilterTime);
   }
 } stg_fractals_defaults;
 
