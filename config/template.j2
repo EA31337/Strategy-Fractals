@@ -14,7 +14,7 @@ struct Stg_Fractals_Params_{{ Timeframe }} : StgParams {
   Stg_Fractals_Params_{{ Timeframe }}() : StgParams(stg_fractals_defaults) {
     lot_size = {{ Fractals_LotSize | default(0) }};
     signal_open_method = {{ Fractals_SignalOpenMethod | default(0) }};
-    signal_open_filter = {{ Fractals_SignalOpenFilterMethod | default(1) }};
+    signal_open_filter_method = {{ Fractals_SignalOpenFilterMethod | default(1) }};
     signal_open_level = (float){{ Fractals_SignalOpenLevel | default(0) }};
     signal_open_boost = {{ Fractals_SignalOpenBoostMethod | default(0) }};
     signal_close_method = {{ Fractals_SignalCloseMethod | default(0) }};
