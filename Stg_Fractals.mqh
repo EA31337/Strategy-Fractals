@@ -6,15 +6,15 @@
 // User input params.
 INPUT_GROUP("Fractals strategy: strategy params");
 INPUT float Fractals_LotSize = 0;                // Lot size
-INPUT int Fractals_SignalOpenMethod = 2;         // Signal open method (-127-127)
-INPUT float Fractals_SignalOpenLevel = 0.0f;     // Signal open level
-INPUT int Fractals_SignalOpenFilterMethod = 32;  // Signal open filter method
-INPUT int Fractals_SignalOpenFilterTime = 6;     // Signal open filter time
+int Fractals_SignalOpenMethod = 0;               // Signal open method (-127-127)
+float Fractals_SignalOpenLevel = 0.0f;           // Signal open level
+INPUT int Fractals_SignalOpenFilterMethod = 43;  // Signal open filter method
+INPUT int Fractals_SignalOpenFilterTime = 8;     // Signal open filter time
 INPUT int Fractals_SignalOpenBoostMethod = 0;    // Signal open boost method
-INPUT int Fractals_SignalCloseMethod = 2;        // Signal close method (-127-127)
-INPUT int Fractals_SignalCloseFilter = 0;        // Signal close filter (-127-127)
-INPUT float Fractals_SignalCloseLevel = 0.0f;    // Signal close level
-INPUT int Fractals_PriceStopMethod = 1;          // Price stop method
+int Fractals_SignalCloseMethod = 0;              // Signal close method (-127-127)
+INPUT int Fractals_SignalCloseFilter = 16;       // Signal close filter (-127-127)
+float Fractals_SignalCloseLevel = 0.0f;          // Signal close level
+INPUT int Fractals_PriceStopMethod = 16;         // Price stop method (0-127)
 INPUT float Fractals_PriceStopLevel = 0;         // Price stop level
 INPUT int Fractals_TickFilterMethod = 1;         // Tick filter method
 INPUT float Fractals_MaxSpread = 4.0;            // Max spread to trade (pips)
@@ -110,23 +110,15 @@ class Stg_Fractals : public Strategy {
       // Returns false when indicator data is not valid.
       return false;
     }
-    double level = _level * Chart().GetPipSize();
-    bool lower = (_indi[CURR][(int)LINE_LOWER] != 0.0 || _indi[PREV][(int)LINE_LOWER] != 0.0 ||
-                  _indi[PPREV][(int)LINE_LOWER] != 0.0);
-    bool upper = (_indi[CURR][(int)LINE_UPPER] != 0.0 || _indi[PREV][(int)LINE_UPPER] != 0.0 ||
-                  _indi[PPREV][(int)LINE_UPPER] != 0.0);
+    IndicatorSignal _signals = _indi.GetSignals(4, _shift);
     switch (_cmd) {
       case ORDER_TYPE_BUY:
-        _result = lower;
-        if (METHOD(_method, 0)) _result &= _indi[CURR][(int)LINE_LOWER] != 0.0;
-        if (METHOD(_method, 1)) _result &= _indi[PREV][(int)LINE_LOWER] != 0.0;
-        if (METHOD(_method, 2)) _result &= _indi[PPREV][(int)LINE_LOWER] != 0.0;
+        _result = _indi[_shift][(int)LINE_LOWER] != 0.0;
+        _result &= _method > 0 ? _signals.CheckSignals(_method) : _signals.CheckSignalsAll(-_method);
         break;
       case ORDER_TYPE_SELL:
-        _result = upper;
-        if (METHOD(_method, 0)) _result &= _indi[CURR][(int)LINE_UPPER] != 0.0;
-        if (METHOD(_method, 1)) _result &= _indi[PREV][(int)LINE_UPPER] != 0.0;
-        if (METHOD(_method, 2)) _result &= _indi[PPREV][(int)LINE_UPPER] != 0.0;
+        _result = _indi[_shift][(int)LINE_UPPER] != 0.0;
+        _result &= _method > 0 ? _signals.CheckSignals(_method) : _signals.CheckSignalsAll(-_method);
         break;
     }
     return _result;
