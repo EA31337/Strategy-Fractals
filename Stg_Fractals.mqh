@@ -45,6 +45,7 @@ struct Stg_Fractals_Params_Defaults : StgParams {
                   ::Fractals_SignalOpenBoostMethod, ::Fractals_SignalCloseMethod, ::Fractals_SignalCloseFilter,
                   ::Fractals_SignalCloseLevel, ::Fractals_PriceStopMethod, ::Fractals_PriceStopLevel,
                   ::Fractals_TickFilterMethod, ::Fractals_MaxSpread, ::Fractals_Shift) {
+    Set(STRAT_PARAM_LS, Fractals_LotSize);
     Set(STRAT_PARAM_OCL, Fractals_OrderCloseLoss);
     Set(STRAT_PARAM_OCP, Fractals_OrderCloseProfit);
     Set(STRAT_PARAM_OCT, Fractals_OrderCloseTime);
