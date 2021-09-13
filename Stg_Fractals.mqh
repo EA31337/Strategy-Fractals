@@ -53,16 +53,6 @@ struct Stg_Fractals_Params_Defaults : StgParams {
   }
 } stg_fractals_defaults;
 
-// Struct to define strategy parameters to override.
-struct Stg_Fractals_Params : StgParams {
-  StgParams sparams;
-
-  // Struct constructors.
-  Stg_Fractals_Params(Indi_Fractals_Params &_iparams, StgParams &_sparams) : sparams(stg_fractals_defaults) {
-    sparams = _sparams;
-  }
-};
-
 #ifdef __config__
 // Loads pair specific param values.
 #include "config/H1.h"
