@@ -30,7 +30,7 @@ INPUT int Fractals_Indi_Fractals_Shift = 0;  // Shift
 // Defines struct with default user indicator values.
 struct Indi_Fractals_Params_Defaults : FractalsParams {
   Indi_Fractals_Params_Defaults() : FractalsParams(::Fractals_Indi_Fractals_Shift) {}
-} indi_fractals_defaults;
+};
 
 // Defines struct to store indicator parameter values.
 struct Indi_Fractals_Params : public FractalsParams {
@@ -51,7 +51,7 @@ struct Stg_Fractals_Params_Defaults : StgParams {
     Set(STRAT_PARAM_OCT, Fractals_OrderCloseTime);
     Set(STRAT_PARAM_SOFT, Fractals_SignalOpenFilterTime);
   }
-} stg_fractals_defaults;
+};
 
 #ifdef __config__
 // Loads pair specific param values.
@@ -71,6 +71,8 @@ class Stg_Fractals : public Strategy {
 
   static Stg_Fractals *Init(ENUM_TIMEFRAMES _tf = NULL) {
     // Initialize strategy initial values.
+    Indi_Fractals_Params_Defaults indi_fractals_defaults;
+    Stg_Fractals_Params_Defaults stg_fractals_defaults;
     StgParams _stg_params(stg_fractals_defaults);
 #ifdef __config__
     SetParamsByTf<StgParams>(_stg_params, _tf, stg_fractals_m1, stg_fractals_m5, stg_fractals_m15, stg_fractals_m30,
