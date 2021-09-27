@@ -80,11 +80,11 @@ class Stg_Fractals : public Strategy {
                              stg_fractals_h1, stg_fractals_h4, stg_fractals_h8);
 #endif
     // Initialize indicator.
-    _stg_params.SetIndicator(new Indi_Fractals(_indi_params));
     // Initialize Strategy instance.
     ChartParams _cparams(_tf, _Symbol);
     TradeParams _tparams;
     Strategy *_strat = new Stg_Fractals(_stg_params, _tparams, _cparams, "Fractals");
+    _strat.SetIndicator(new Indi_Fractals(_indi_params));
     return _strat;
   }
 
