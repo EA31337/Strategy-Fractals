@@ -71,8 +71,6 @@ class Stg_Fractals : public Strategy {
 
   static Stg_Fractals *Init(ENUM_TIMEFRAMES _tf = NULL) {
     // Initialize strategy initial values.
-    Indi_Fractals_Params_Defaults indi_fractals_defaults;
-    IndiFractalsParams _indi_params(indi_fractals_defaults, _tf);
     Stg_Fractals_Params_Defaults stg_fractals_defaults;
     StgParams _stg_params(stg_fractals_defaults);
 #ifdef __config__
@@ -84,8 +82,16 @@ class Stg_Fractals : public Strategy {
     ChartParams _cparams(_tf, _Symbol);
     TradeParams _tparams;
     Strategy *_strat = new Stg_Fractals(_stg_params, _tparams, _cparams, "Fractals");
-    _strat.SetIndicator(new Indi_Fractals(_indi_params));
     return _strat;
+  }
+
+  /**
+   * Event on strategy's init.
+   */
+  void OnInit() {
+    Indi_Fractals_Params_Defaults indi_fractals_defaults;
+    IndiFractalsParams _indi_params(indi_fractals_defaults, Get<ENUM_TIMEFRAMES>(STRAT_PARAM_TF));
+    SetIndicator(new Indi_Fractals(_indi_params));
   }
 
   /**
