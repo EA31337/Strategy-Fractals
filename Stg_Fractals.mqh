@@ -27,17 +27,6 @@ INPUT int Fractals_Indi_Fractals_Shift = 0;  // Shift
 
 // Structs.
 
-// Defines struct with default user indicator values.
-struct Indi_Fractals_Params_Defaults : IndiFractalsParams {
-  Indi_Fractals_Params_Defaults() : IndiFractalsParams(::Fractals_Indi_Fractals_Shift) {}
-};
-
-// Defines struct to store indicator parameter values.
-struct Indi_Fractals_Params : public IndiFractalsParams {
-  // Struct constructors.
-  void Indi_Fractals_Params(IndiFractalsParams &_params, ENUM_TIMEFRAMES _tf) : IndiFractalsParams(_params, _tf) {}
-};
-
 // Defines struct with default user strategy values.
 struct Stg_Fractals_Params_Defaults : StgParams {
   Stg_Fractals_Params_Defaults()
@@ -89,8 +78,8 @@ class Stg_Fractals : public Strategy {
    * Event on strategy's init.
    */
   void OnInit() {
-    Indi_Fractals_Params_Defaults indi_fractals_defaults;
-    IndiFractalsParams _indi_params(indi_fractals_defaults, Get<ENUM_TIMEFRAMES>(STRAT_PARAM_TF));
+    IndiFractalsParams _indi_params(::Fractals_Indi_Fractals_Shift);
+    _indi_params.SetTf(Get<ENUM_TIMEFRAMES>(STRAT_PARAM_TF));
     SetIndicator(new Indi_Fractals(_indi_params));
   }
 
