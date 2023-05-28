@@ -58,7 +58,7 @@ class Stg_Fractals : public Strategy {
   Stg_Fractals(StgParams &_sparams, TradeParams &_tparams, ChartParams &_cparams, string _name = "")
       : Strategy(_sparams, _tparams, _cparams, _name) {}
 
-  static Stg_Fractals *Init(ENUM_TIMEFRAMES _tf = NULL) {
+  static Stg_Fractals *Init(ENUM_TIMEFRAMES _tf = NULL, EA* _ea = NULL) {
     // Initialize strategy initial values.
     Stg_Fractals_Params_Defaults stg_fractals_defaults;
     StgParams _stg_params(stg_fractals_defaults);
